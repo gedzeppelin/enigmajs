@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "packages/enigmajs-core/src",
+    "outDir": "packages/enigmajs-core/dist",
+  },
+  "include": [
+    "packages/enigmajs-core/src",
+  ],
+}

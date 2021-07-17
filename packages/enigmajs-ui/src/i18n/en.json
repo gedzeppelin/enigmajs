@@ -1,0 +1,212 @@
+{
+  "app": {
+    "default_error": "An unexpected error has occurred, please try again",
+    "default_success": "Action completed successfully",
+    "default_title": "Administrator",
+    "empty_field": "Empty field",
+    "error": "Error",
+    "form_error": "There are errors in the input data",
+    "login": "Log in",
+    "success": "Success",
+    "yes": "Yes",
+    "no": "No",
+    "search": "Search",
+    "actions": "Actions",
+    "empty_data": "No data. Create one!",
+    "confirm": "Confirm action",
+    "next": "Next",
+    "back": "Back",
+    "cancel": "Cancel",
+    "logout": "Logout",
+    "profile": "My profile"
+  },
+  "crud": {
+    "create": "Create",
+    "read": "List",
+    "delete": "Delete",
+    "update": "Edit",
+    "delete_warning": "Are you sure you want to delete this resource?"
+  },
+  "err": {
+    "back": "Back",
+    "retry": "Retry",
+    "request_with_url": "An error has occurred while fetching",
+    "page_not_found": "The requested page was not found",
+    "request_no_url": "An error has occurred while making the HTTP request",
+    "requests": {
+      "prom_ne_res": "The number of HTTP responses does not match the number of HTTP requests.  Contact your system administrator",
+      "all_failed": "All HTTP requests have failed"
+    }
+  },
+  "lgn": {
+    "password": "Password",
+    "username": "Username",
+    "remember": "Remember me"
+  },
+  "nav": {
+    "home": "Home",
+    "users": {
+      "create": "Create user",
+      "_": "Users",
+      "update": "Update user"
+    },
+    "store": "Store",
+    "promotion": "Promotion",
+    "products": {
+      "create": "Create product",
+      "_": "Products",
+      "update": "Update product"
+    },
+    "undefined": "Undefined",
+    "error": "Error",
+    "categories": {
+      "create": "Create category",
+      "_": "Categories",
+      "update": "Update category"
+    },
+    "login": "Log in",
+    "providers": {
+      "_": "Providers",
+      "create": "Create provider",
+      "update": "Update provider"
+    },
+    "settings": {
+      "_": "Settings",
+      "payment_methods": {
+        "_": "Payment methods",
+        "update": "Update payment method"
+      },
+      "coverage": "Coverage",
+      "config": {
+        "_": "Global variables",
+        "update": "Update global variable"
+      }
+    }
+  },
+  "rle": {},
+  "cmn": {
+    "name": "Name",
+    "price": "Price",
+    "image": "Image",
+    "list": "List",
+    "level": "Level",
+    "is_active": "Enabled?",
+    "drag_file": "Drop file here or  ",
+    "reset": "Reset",
+    "refresh": "Refresh",
+    "description": "Description",
+    "automatic": "Automatic",
+    "i18n_errors": "At least one localization request has failed, please verify the newly data integrity or contact the administrator",
+    "current_selection": "Current selection",
+    "loading": "Loading...",
+    "alternatives": "Alternatives",
+    "summary": "Summary",
+    "images": "Images",
+    "is_available": "Available?",
+    "is_food": "Is food?",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "email": "Email",
+    "phone": "Phone",
+    "slug": "Slug",
+    "details": "Details",
+    "observations": "Observations",
+    "notes": "Notas",
+    "basic_info": "Basic information",
+    "extra_info": "Optional information"
+  },
+  "eg": {
+    "file_input": {
+      "click_upload": "click to upload"
+    },
+    "promise_section": {
+      "last_ok": "Restore",
+      "loading": "[{plc}] Loading..."
+    },
+    "i18n_form": {
+      "form_header": "LANGUAGE ID: ",
+      "translate": "Translate from {lang}",
+      "popover_content": "If active, the input data in {0} will be automatically translated into {1} on save. This translation can be triggered independently at any time.",
+      "popover_is_all_auto": "{0} is activated",
+      "translate_all_auto": "Translate all automatically",
+      "translate_auto": "Translate automatically",
+      "translate_now": "Translate now",
+      "popover_content_def": "If active, the input data filled in {0} will be automatically translated into every {1} on save. If this option is enabled the per-language automatic translation wouldn't can be disabled (the manual translation can be triggered independently at any time).",
+      "this_lang": "this language",
+      "other_lang": "other language",
+      "to_translate": "To translate: {val}",
+      "translation_warning": "The translation request was successful but at least one individual translation have failed",
+      "translation_error": "The translation request have failed",
+      "wait_default": "Awaiting {def} input data...",
+      "validation_error": "There are errors in the localizated input data",
+      "both_validation_error": "There are errors in both localizated and non-localizated input data",
+      "no_def": "The specified default language was not found in the server response",
+      "empty_translation": "There is no data to translate",
+      "translation_success": "The translation request was successful!"
+    },
+    "image_input": {
+      "upload_error": "An error was occurred while processing the file",
+      "view": "View"
+    },
+    "paginator": {
+      "title": "List of active {model}"
+    },
+    "promise_select": {
+      "placeholder": "No selection",
+      "empty": "There is no items to show"
+    },
+    "ubigeo-select": {
+      "prov": "Province",
+      "dpto": "Department",
+      "dist": "District"
+    }
+  },
+  "lang": {
+    "es": "Spanish",
+    "en": "English",
+    "default_lang": "Default language"
+  },
+  "user": {
+    "password": "Password",
+    "credentials": "Credentials",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "birthday": "Birthday",
+    "degree": "Degree",
+    "role": "Role"
+  },
+  "provider": {
+    "business_name": "Bussiness name",
+    "doc_type": "Identifier type",
+    "alien_card": "Alien card",
+    "dni": "National identity card",
+    "doc": "Document number",
+    "business_address": "Bussiness address",
+    "trust_level": "Trust level",
+    "additional_info": "Additional information",
+    "business_info": "Business information",
+    "personal_info": "Personal information"
+  },
+  "product": {
+    "provider": "Provider",
+    "sold": "Sold",
+    "delete_last_detail": "Can't delete the last detail of a product",
+    "detail_no_name": "Detail field is required",
+    "detail_no_value": "Value field is required",
+    "stock": "Stock"
+  },
+  "config": {
+    "config": "Global configurations",
+    "value": "Value",
+    "type": "Type"
+  },
+  "category": {
+    "parent": "Parent"
+  },
+  "rule": {
+    "required": "This field is required",
+    "number": "This field must be numeric",
+    "ne_array": "Select at least one item"
+  }
+}

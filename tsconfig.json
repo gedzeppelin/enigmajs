@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "baseUrl": ".",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "outDir": "dist",
+    "removeComments": false,
+    "rootDir": ".",
+    "skipLibCheck": true,
+    "sourceMap": false,
+    "strict": true,
+    "target": "esnext",
+    "paths": {
+      "enigmajs-core": [
+        "packages/enigmajs-core/src"
+      ]
+    }
+  },
+  "include": [
+    "packages/*/src",
+  ],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "**/tests",
+  ],
+}

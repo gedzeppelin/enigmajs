@@ -1,6 +1,7 @@
-import { ConfigLiteral, makeErrUrl, Response } from ".";
-import { Paginator } from "../paginator";
+import { ConfigLiteral, makeErrUrl, Response } from "./response";
+
 import { defaults } from "../defaults";
+import { Paginator } from "../paginator";
 
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 

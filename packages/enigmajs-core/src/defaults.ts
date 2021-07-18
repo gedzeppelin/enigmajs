@@ -1,7 +1,6 @@
 import { NotifyKinds, NotifyType } from "./response";
 
 import { Notyf } from "notyf";
-import "notyf/notyf.min.css";
 import { assignWith, isUndefined } from "lodash";
 
 interface Notifier {

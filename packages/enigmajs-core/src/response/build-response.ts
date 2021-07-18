@@ -1,6 +1,14 @@
-import { ConfigLiteral, Response, Ok, Err, NotifyKinds, makeErrUrl } from ".";
-import { Paginator } from "../paginator";
+import {
+  ConfigLiteral,
+  Response,
+  Ok,
+  Err,
+  NotifyKinds,
+  makeErrUrl,
+} from "./response";
+
 import { defaults } from "../defaults";
+import { Paginator } from "../paginator";
 
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 

@@ -1,5 +1,5 @@
 import { cloneDeep, isNaN, isNull, isPlainObject, set } from "lodash";
-import { EG_CACHE_PROP } from "./cache/manage";
+import { EG_CACHE_PROP } from "./cache/cache";
 
 export function deepPurgeObject(
   source: Record<string, unknown>,

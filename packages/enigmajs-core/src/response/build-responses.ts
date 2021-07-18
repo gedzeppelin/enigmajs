@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Response, NotifyKinds, Ok, Err } from ".";
+import { Response, NotifyKinds, Ok, Err } from "./response";
+
+import { defaults } from "../defaults";
 
 import { AxiosInstance } from "axios";
-import { defaults } from "../defaults";
 
 // eslint-disable-next-line prettier/prettier
 export type Request4<T, R, V, W> = [Promise<Response<T>>, Promise<Response<R>>, Promise<Response<V>>, Promise<Response<W>>];

@@ -14,18 +14,17 @@ import { v4 as uuidV4 } from "uuid";
 import {
   CreateCache,
   DeleteCache,
-  IdleCache,
+  EG_CACHE_PROP,
   EgCache,
   EgCacheConfig,
   EgCacheItemConfig,
+  IdleCache,
   ProxyCache,
   UpdateCache,
-} from ".";
+} from "./cache";
 
 import { EgAxiosInstance, Response } from "../response";
 import { multipartData, deepPurgeObject } from "../request";
-
-export const EG_CACHE_PROP = "__m2m_cache";
 
 export interface Target {
   [key: string]: string | boolean | number | Target[] | Target;

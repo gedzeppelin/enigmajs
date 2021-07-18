@@ -3,6 +3,8 @@
   "compilerOptions": {
     "rootDir": "packages/enigmajs-core/src",
     "outDir": "packages/enigmajs-core/dist",
+    "declaration": true,
+    "emitDeclarationOnly": true,
   },
   "include": [
     "packages/enigmajs-core/src",

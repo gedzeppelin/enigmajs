@@ -1,8 +1,10 @@
 {
   "name": "enigmajs-core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "EnigmaJS core library",
-  "main": "dist/index.js",
+  "main": "dist/enigmajs-core.js",
+  "module": "dist/enigmajs-core.esm.js",
+  "browser": "dist/enigmajs-core.global.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist",

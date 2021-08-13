@@ -1,6 +1,6 @@
 {
   "name": "enigmajs-ui",
-  "version": "0.2.0",
+  "version": "0.1.1",
   "description": "EnigmaJS Vue UI component library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,10 +21,10 @@
   "license": "MIT",
   "dependencies": {
     "async-validator": "^3.5.2",
-    "element-plus": "^1.0.2-beta.55",
-    "enigmajs-core": "0.2.0",
+    "element-plus": "^1.0.2-beta.70",
+    "enigmajs-core": "^0.1.1",
     "lodash": "^4.17.21",
-    "vue": "^3.1.5",
+    "vue": "^3.2.1",
     "vue-i18n": "^9.1.6",
     "vue-json-tree": "^0.4.3",
     "vue-router": "^4.0.10"

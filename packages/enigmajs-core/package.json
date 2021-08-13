@@ -2,9 +2,10 @@
   "name": "enigmajs-core",
   "version": "0.1.1",
   "description": "EnigmaJS core library",
-  "main": "dist/enigmajs-core.js",
-  "module": "dist/enigmajs-core.esm.js",
-  "browser": "dist/enigmajs-core.global.js",
+  "main": "dist/enigmajs-core.cjs.js",
+  "module": "dist/enigmajs-core.es.js",
+  "unpkg": "dist/enigmajs-core.global.js",
+  "jsdelivr": "dist/enigmajs-core.global.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist",
@@ -27,6 +28,6 @@
     "lodash": "^4.17.21",
     "notyf": "^3.10.0",
     "uuid": "^8.3.2",
-    "vue": "^3.1.5"
+    "vue": "^3.2.1"
   }
 }

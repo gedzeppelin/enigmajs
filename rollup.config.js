@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+// @ts-check
 import path from "path";
 
 import typescript from "rollup-plugin-typescript2";
@@ -14,6 +14,7 @@ const packageDir = path.resolve(packagesDir, process.env.TARGET);
 
 const resolve = (p) => path.resolve(packageDir, p);
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const pkg = require(resolve(`package.json`));
 //const packageOptions = pkg.buildOptions || {};
 //const name = packageOptions.filename || path.basename(packageDir);
@@ -30,7 +31,7 @@ export default {
       format: "es",
     },
     {
-      file: resolve(pkg.browser),
+      file: resolve(pkg.unpkg),
       format: "iife",
       name: "EgCore",
       globals: {
@@ -44,9 +45,15 @@ export default {
   ],
   external: [...Object.keys(pkg.dependencies || {})],
   plugins: [
-    typescript({
-      typescript: require("typescript"),
+    typescript(),
+    terser({
+      compress: {
+        ecma: 2015,
+        pure_getters: true,
+        // Fixes errors with inherited class initializations.
+        sequences: false,
+      },
+      safari10: true,
     }),
-    terser(),
   ],
 };

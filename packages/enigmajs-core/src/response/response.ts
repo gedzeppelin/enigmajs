@@ -122,7 +122,6 @@ export class Ok<T = any> extends Response<T> {
   public constructor(opts: IOk<T>) {
     super(opts.requestURL, opts.status, opts.message);
     this.payload = opts.payload;
-
     this.notify(opts.notify);
   }
 
@@ -157,11 +156,11 @@ export class Err extends Response<never> {
   private messages?: ErrInfo[];
 
   public constructor(opts?: IErr) {
+    super(opts?.requestURL, opts?.status, opts?.message);
+
     if (isNil(opts)) {
       return;
     }
-
-    super(opts.requestURL, opts.status, opts.message);
 
     if (
       typeof opts.error === "object" &&

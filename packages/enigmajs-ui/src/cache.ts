@@ -1,5 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { customRef, reactive, Ref, ref, toRaw } from "vue";
+
+import {
+  CreateCache,
+  DeleteCache,
+  EG_CACHE_PROP,
+  EgAxiosInstance,
+  EgCache,
+  EgCacheConfig,
+  EgCacheItemConfig,
+  IdleCache,
+  ProxyCache,
+  Response,
+  UpdateCache,
+  deepPurgeObject,
+  multipartData,
+} from "enigmajs-core";
+
 import {
   isNil,
   get,
@@ -10,21 +27,6 @@ import {
   cloneDeep,
 } from "lodash";
 import { v4 as uuidV4 } from "uuid";
-
-import {
-  CreateCache,
-  DeleteCache,
-  EG_CACHE_PROP,
-  EgCache,
-  EgCacheConfig,
-  EgCacheItemConfig,
-  IdleCache,
-  ProxyCache,
-  UpdateCache,
-} from "./cache";
-
-import { EgAxiosInstance, Response } from "../response";
-import { multipartData, deepPurgeObject } from "../request";
 
 export interface Target {
   [key: string]: string | boolean | number | Target[] | Target;
@@ -556,7 +558,7 @@ export class EgCacheManager {
         );
       } else if (cache instanceof UpdateCache) {
         promises.push(
-          this.axios.getResponse({
+          this.axios.fetchResponse({
             method: "PATCH",
             url: `${config.requestUrl}/${cache.payloadId}/`,
             data: reqData,

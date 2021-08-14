@@ -1,9 +1,11 @@
 import {
   ConfigLiteral,
-  Response,
-  Ok,
   Err,
+  IErr,
+  IOk,
   NotifyKinds,
+  Ok,
+  Response,
   makeErrUrl,
 } from "./response";
 
@@ -17,7 +19,8 @@ export interface Options {
   paginated?: boolean;
 
   notify?: NotifyKinds;
-  message?: string;
+  errMessage?: string;
+  okMessage?: string;
 
   // Fold options.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -93,22 +96,26 @@ export async function buildResponse<T>(
         const config = reqConfig as string & AxiosRequestConfig;
         const { data, request, status } = await this(config);
 
-        return {
+        const iOk: IOk<T> = {
           payload: paginated ? new Paginator(data) : data,
           requestURL: request.responseURL,
           status: status,
           notify: reqOpts?.notify ?? defaults.notify,
-          message: reqOpts?.message,
+          message: reqOpts?.okMessage,
         };
+
+        return iOk;
       } catch (e) {
         if (i + 1 === attempts && axios.isAxiosError(e)) {
-          return {
+          const iErr: IErr = {
             error: e.response?.data,
-            requestURL: e.request?.responseURL || makeErrUrl(e),
+            requestURL: e.request?.responseURL ?? makeErrUrl(e),
             status: e.response?.status,
             notify: reqOpts?.notify ?? defaults.notify,
-            message: reqOpts?.message,
+            message: reqOpts?.errMessage,
           };
+
+          return iErr;
         }
       }
     }

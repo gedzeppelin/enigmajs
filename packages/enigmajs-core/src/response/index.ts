@@ -2,7 +2,7 @@
 export * from "./response";
 
 import { Response, ConfigLiteral } from "./response";
-import * as GetResponse from "./get-response";
+import * as FetchResponse from "./fetch-response";
 import * as BuildResponse from "./build-response";
 import * as BuildResponses from "./build-responses";
 
@@ -13,31 +13,31 @@ import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 export interface EgAxiosInstance extends AxiosInstance {
   // Make SIMPLE requests.
   // eslint-disable-next-line prettier/prettier
-  getResponse<T = any>(
-    config: GetResponse.ConfigExact
+  fetchResponse<T = any>(
+    config: FetchResponse.ConfigExact
   ): Promise<Response<T>>;
 
-  getResponse<T = any>(
-    config: GetResponse.ConfigPaginated
+  fetchResponse<T = any>(
+    config: FetchResponse.ConfigPaginated
   ): Promise<Response<Paginator<T>>>;
 
-  getResponse<T = any>(
-    config: GetResponse.ConfigBoth
+  fetchResponse<T = any>(
+    config: FetchResponse.ConfigBoth
   ): Promise<Response<T | Paginator<T>>>;
 
-  getResponse<T = any>(
+  fetchResponse<T = any>(
     config: ConfigLiteral,
-    options?: GetResponse.OptionsExact
+    options?: FetchResponse.OptionsExact
   ): Promise<Response<T>>;
 
-  getResponse<T = any>(
+  fetchResponse<T = any>(
     config: ConfigLiteral,
-    options?: GetResponse.OptionsPaginated
+    options?: FetchResponse.OptionsPaginated
   ): Promise<Response<Paginator<T>>>;
 
-  getResponse<T = any>(
+  fetchResponse<T = any>(
     config: ConfigLiteral,
-    options?: GetResponse.OptionsBoth
+    options?: FetchResponse.OptionsBoth
   ): Promise<Response<T | Paginator<T>>>;
 
   // Make SINGLE requests.
@@ -88,7 +88,7 @@ export interface EgAxiosInstance extends AxiosInstance {
 
 export const createAxios = (config?: AxiosRequestConfig): EgAxiosInstance => {
   const _axios = axios.create(config) as EgAxiosInstance;
-  _axios.getResponse = GetResponse.getResponse;
+  _axios.fetchResponse = FetchResponse.fetchResponse;
   _axios.buildResponse = BuildResponse.buildResponse;
   (_axios.buildResponses as unknown) = BuildResponses.buildResponses;
   return _axios;

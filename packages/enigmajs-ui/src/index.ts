@@ -1,4 +1,4 @@
-import { InjectionKey, Plugin, Ref } from "vue";
+/* import { InjectionKey, Plugin, Ref } from "vue";
 
 import EgBackground from "./background";
 import EgCreateUpdate, { EgCreateUpdateI18n } from "./create-update";
@@ -50,6 +50,7 @@ type _IFKey = InjectionKey<Ref<IForm>>;
 export const IFORM_KEY: _IFKey = Symbol("eg.common.form");
 
 type _IEKey = InjectionKey<boolean>;
-export const IS_EDIT_KEY: _IEKey = Symbol("eg.create_update.isEdit");
+export const IS_EDIT_KEY: _IEKey = Symbol("eg.create_update.isEdit"); */
 
+export * from "./cache";
 export * from "./utils";

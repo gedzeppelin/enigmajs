@@ -1,6 +1,6 @@
 {
   "name": "enigmajs-core",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "EnigmaJS core library",
   "main": "dist/enigmajs-core.cjs.js",
   "module": "dist/enigmajs-core.es.js",
@@ -23,11 +23,8 @@
   "author": "Gedy Palomino",
   "license": "MIT",
   "dependencies": {
-    "async-validator": "^3.5.2",
     "axios": "^0.21.1",
     "lodash": "^4.17.21",
-    "notyf": "^3.10.0",
-    "uuid": "^8.3.2",
-    "vue": "^3.2.1"
+    "notyf": "^3.10.0"
   }
 }

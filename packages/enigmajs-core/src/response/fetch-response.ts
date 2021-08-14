@@ -4,6 +4,8 @@ import { defaults } from "../defaults";
 import { Paginator } from "../paginator";
 
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import { IOk } from "enigmajs-core";
+import { IErr } from "enigmajs-core";
 
 export interface Options {
   attempts?: number;
@@ -52,7 +54,7 @@ function isConfigObject(obj: unknown | undefined): obj is ConfigObject {
  * @param opts the requests options for internal handling.
  * @returns the parsed Response from the clean request.
  */
-export async function getResponse<T>(
+export async function fetchResponse<T>(
   this: AxiosInstance,
   config: ConfigLiteral | ConfigObject,
   opts?: Options
@@ -70,18 +72,22 @@ export async function getResponse<T>(
         const config = reqConfig as string & AxiosRequestConfig;
         const { data, request, status } = await this(config);
 
-        return {
+        const iOk: IOk<T> = {
           payload: paginated ? new Paginator(data) : data,
           requestURL: request.responseURL,
           status: status,
         };
+
+        return iOk;
       } catch (e) {
         if (i + 1 === attempts && axios.isAxiosError(e)) {
-          return {
+          const iErr: IErr = {
             error: e.response?.data,
-            requestURL: e.request?.responseURL || makeErrUrl(e),
+            requestURL: e.request?.responseURL ?? makeErrUrl(e),
             status: e.response?.status,
           };
+
+          return iErr;
         }
       }
     }

@@ -24,7 +24,7 @@ el-card(v-bind="$attrs", shadow="never")
           type="primary"
         ) {{ isUpdate ? t('crud.update') : t('crud.create') }}
 
-  eg-loader(v-if="isLoading")
+  eg-loader(v-if="isLoading", :height="500")
   el-form(
     ref="form",
     v-bind="$attrs",
@@ -53,21 +53,22 @@ import {
   onMounted,
 } from "vue";
 
+import { multipartData } from "enigmajs-core";
 import { get } from "lodash";
-import { multipartData, Target } from "enigmajs-core";
-
-import { useI18n } from "vue-i18n";
+import { useI18n } from "../plugins/i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import { IFORM_KEY, IS_EDIT_KEY, Rules } from "..";
 import { IForm } from "../form-i18n";
 import { useAxios } from "../plugins/axios";
 
+import { Target } from "../types";
+
 export default defineComponent({
-  name: "eg-cu",
+  name: "EgCu",
   props: {
-    model: Object as PropType<Target>,
-    target: Object as PropType<Target>,
+    model: { type: Object as PropType<Target>, default: undefined },
+    target: { type: Object as PropType<Target>, default: undefined },
 
     requestUrl: {
       type: String,
@@ -75,8 +76,8 @@ export default defineComponent({
       validator: (value: string) => /^\/.*[^/]$/.test(value),
     },
 
-    rules: Object as PropType<Rules>,
-    defaults: Object as PropType<Target>,
+    rules: { type: Object as PropType<Rules>, default: undefined },
+    defaults: { type: Object as PropType<Target>, default: undefined },
 
     idRouterProp: { type: String, default: "id" },
     idProp: { type: String, default: "id" },
@@ -205,9 +206,8 @@ export default defineComponent({
       });
     }
 
-    // TODO repair this
     onMounted(() => {
-      console.log(form.value);
+      //console.log(form.value);
     });
 
     return {

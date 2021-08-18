@@ -24,17 +24,17 @@ el-card(shadow="never")
           type="primary"
         ) {{ isUpdate ? t('crud.update') : t('crud.create') }}
 
-  eg-loader(v-if="isLoading")
+  eg-loader(v-if="isLoading", :height="500")
   el-form(
     ref="form",
     v-else,
+    :label-position="xs ? 'top' : 'left'",
+    :label-width="labelWidth",
     :model="model ?? intEntity",
-    :rules="rules",
-    label-position="left",
-    label-width="125px"
+    :rules="rules"
   )
     el-row(:gutter="24", justify="space-evenly", type="flex")
-      el-col(:md="12", :span="24", :xl="11")
+      el-col(:lg="12", :span="24", :xl="11")
         slot(
           :entity="intEntity",
           :i18nItems="intI18nItems",
@@ -44,31 +44,32 @@ el-card(shadow="never")
           :isUpdate="isUpdate"
         )
 
-      el-col(:md="12", :span="24", :xl="11")
+      el-col(:lg="12", :span="24", :xl="11")
         slot(
           :entity="intEntity",
-          :i18nItems="intI18nItems",
-          :isI18nLoading="isI18nLoading",
-          :isLoading="isLoading",
-          :isSaving="isSaving",
-          :isUpdate="isUpdate",
+          :i18n-items="intI18nItems",
+          :is-i18n-loading="isI18nLoading",
+          :is-loading="isLoading",
+          :is-saving="isSaving",
+          :is-update="isUpdate",
           name="above-i18n"
         )
         eg-form-i18n(
           ref="formI18n",
           :fields="i18nFields",
           :items="intI18nItems",
+          :label-width="labelWidthI18n",
           :rules="rulesI18n",
           :target="i18nTarget",
           @load="isI18nLoading = false"
         )
         slot(
           :entity="intEntity",
-          :i18nItems="intI18nItems",
-          :isI18nLoading="isI18nLoading",
-          :isLoading="isLoading",
-          :isSaving="isSaving",
-          :isUpdate="isUpdate",
+          :i18n-items="intI18nItems",
+          :is-i18n-loading="isI18nLoading",
+          :is-loading="isLoading",
+          :is-saving="isSaving",
+          :is-update="isUpdate",
           name="under-i18n"
         )
 </template>
@@ -87,53 +88,60 @@ import {
   watch,
 } from "vue";
 
-import { Paginator, Response, multipartData } from "enigmajs-core";
+import {
+  Paginator,
+  Response,
+  multipartData,
+  EgCacheConfig,
+} from "enigmajs-core";
+import { useI18n } from "../plugins/i18n";
+import { useRoute, useRouter } from "vue-router";
 import { clone, cloneDeep, get, set, unset } from "lodash";
 
-import { useI18n } from "vue-i18n";
-import { useRoute, useRouter } from "vue-router";
-
-import { CACHE_MANAGER_KEY } from ".";
-import { IFORM_KEY, IS_EDIT_KEY, Rules } from "..";
+import {
+  CACHE_MANAGER_KEY,
+  InitialRequest,
+  ParentRequest,
+  PrepareRequest,
+} from ".";
+import { IFORM_KEY, IS_EDIT_KEY, EgCacheManager, Rules } from "..";
 import { IForm, IFormI18n } from "../form-i18n";
+import { useViewport } from "../viewport";
 import { useAxios } from "../plugins/axios";
 
-import { EgCacheConfig, EgCacheManager, Target } from "enigmajs-core";
-
-export interface ParentRequest<T = any> {
-  request: Promise<Response<T>>;
-  mutation?: (response: T, entity: any) => void;
-}
+import { Target } from "../types";
 
 function isParentRequest<T = any>(obj: unknown): obj is ParentRequest<T> {
   return typeof obj === "object" && obj !== null && "request" in obj;
 }
 
-export type InitialRequest<T = any> =
-  | ParentRequest<T>
-  | ((id: any) => ParentRequest<T>);
-
-export function addRequest<T = any>(
-  request: Promise<Response<T>>,
-  mutation: (response: T, entity: any) => void
-): ParentRequest<T> {
-  return { request, mutation };
-}
-
-export type PrepareRequest = (obj: any) => void;
-
 export default defineComponent({
-  name: "eg-cu-i18n",
+  name: "EgCuI18n",
   props: {
-    model: Object as PropType<Target>,
-    target: Object as PropType<Target>,
-    defaults: Object as PropType<Record<string, unknown>>,
+    model: { type: Object as PropType<Target>, default: undefined },
+    target: { type: Object as PropType<Target>, default: undefined },
+    defaults: {
+      type: Object as PropType<Record<string, unknown>>,
+      default: undefined,
+    },
 
-    initialRequests: Array as PropType<InitialRequest[]>,
-    prepareCreate: Function as PropType<PrepareRequest>,
-    prepareUpdate: Function as PropType<PrepareRequest>,
+    labelWidth: { type: [String, Number], default: "120px" },
+    labelWidthI18n: { type: [String, Number], default: undefined },
 
-    egCache: [Object] as PropType<EgCacheConfig>,
+    initialRequests: {
+      type: Array as PropType<InitialRequest[]>,
+      default: undefined,
+    },
+    prepareCreate: {
+      type: Function as PropType<PrepareRequest>,
+      default: undefined,
+    },
+    prepareUpdate: {
+      type: Function as PropType<PrepareRequest>,
+      default: undefined,
+    },
+
+    egCache: { type: Object as PropType<EgCacheConfig>, default: undefined },
 
     requestUrl: {
       type: String,
@@ -142,15 +150,16 @@ export default defineComponent({
     },
     i18nRequestUrl: {
       type: String,
+      required: true,
       validator: (value: string) => /^\/.*[^/]$/.test(value),
     },
 
-    rules: Object as PropType<Rules>,
-    rulesI18n: Object as PropType<Rules>,
+    rules: { type: Object as PropType<Rules>, default: undefined },
+    rulesI18n: { type: Object as PropType<Rules>, default: undefined },
 
-    i18nItems: Array as PropType<Target[]>,
+    i18nItems: { type: Array as PropType<Target[]>, default: undefined },
     i18nItemFkProp: { type: String, required: true },
-    i18nFields: Array as PropType<string[]>,
+    i18nFields: { type: Array as PropType<string[]>, default: undefined },
 
     translationProp: { type: String, default: "translation" },
     idRouterProp: { type: String, default: "id" },
@@ -163,6 +172,7 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const { t } = useI18n();
+    const { xs } = useViewport();
 
     const form = ref<IForm>() as Ref<IForm>;
     const formI18n = ref<IFormI18n>() as Ref<IFormI18n>;
@@ -198,10 +208,10 @@ export default defineComponent({
       : reactive(initial);
 
     /* watchEffect(() => {
-      if (!get(intEntity, props.translationProp)) {
-        set(intEntity, props.translationProp, {});
-      }
-    }); */
+        if (!get(intEntity, props.translationProp)) {
+          set(intEntity, props.translationProp, {});
+        }
+      }); */
 
     const i18nTarget = computed(() => get(intEntity, props.translationProp));
     const intI18nItems = ref<any[]>(props.i18nItems ?? []);
@@ -270,7 +280,7 @@ export default defineComponent({
               const cloned = clone(i18n);
               set(cloned, props.i18nItemFkProp, entityId);
 
-              return axios.getResponse({
+              return axios.fetchResponse({
                 method: "POST",
                 url: `${i18nUrl()}/`,
                 data: cloned,
@@ -312,7 +322,7 @@ export default defineComponent({
       await axios.buildResponses({
         notify: "always",
         requests: [
-          axios.getResponse({
+          axios.fetchResponse({
             method: "PATCH",
             url: `${props.requestUrl}/${selfId}/`,
             data: reqData,
@@ -321,7 +331,7 @@ export default defineComponent({
           axios.buildResponses({
             requests: intI18nItems.value.map((i18n) => {
               if (i18n.id) {
-                return axios.getResponse({
+                return axios.fetchResponse({
                   method: "PATCH",
                   url: `${i18nUrl()}/${i18n.id}/`,
                   data: i18n,
@@ -330,7 +340,7 @@ export default defineComponent({
                 const cloned = clone(i18n);
                 set(cloned, props.i18nItemFkProp, selfId);
 
-                return axios.getResponse({
+                return axios.fetchResponse({
                   method: "POST",
                   url: `${i18nUrl()}/`,
                   data: cloned,
@@ -369,11 +379,11 @@ export default defineComponent({
 
     if (isUpdate && selfId) {
       const promises = [
-        axios.getResponse({
+        axios.fetchResponse({
           method: "GET",
           url: `${props.requestUrl}/${selfId}/`,
         }),
-        axios.getResponse({
+        axios.fetchResponse({
           paginated: true,
           request: {
             method: "GET",
@@ -479,6 +489,7 @@ export default defineComponent({
       isUpdate,
       route,
       t,
+      xs,
     };
   },
 });

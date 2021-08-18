@@ -1,6 +1,6 @@
 import { h, VNode } from "vue";
 
-import { t } from "../defaults";
+import { t } from "../options";
 
 export function priceFormatter(
   _row: unknown,

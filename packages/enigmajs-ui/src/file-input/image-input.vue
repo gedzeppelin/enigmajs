@@ -78,9 +78,9 @@ import {
   computed,
   provide,
 } from "vue";
-import { get, isEqual, isNil, set } from "lodash";
 
-import { useI18n } from "vue-i18n";
+import { useI18n } from "../plugins/i18n";
+import { get, isEqual, isNil, set } from "lodash";
 
 import { IFileInput, INTERNAL_KEY, MUTATE_INTERNAL_KEY } from ".";
 import { IFORM_KEY } from "..";
@@ -106,9 +106,12 @@ type Internal =
     };
 
 export default defineComponent({
-  name: "eg-image-input",
+  name: "EgImageInput",
   props: {
-    modelValue: [String, Object, Array] as PropType<ModelValue>,
+    modelValue: {
+      type: [String, Object, Array] as PropType<ModelValue>,
+      default: undefined,
+    },
     objectSrcProp: { type: String, default: "image" },
 
     formProp: { type: String, default: "image" },

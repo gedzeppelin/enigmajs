@@ -20,23 +20,28 @@ el-popconfirm(
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { defineComponent, ref, inject, PropType } from "vue";
-import { get, isNil, pull } from "lodash";
-import { useRoute, useRouter } from "vue-router";
 
-import { useI18n } from "vue-i18n";
+import { useI18n } from "../plugins/i18n";
+
+import { useRoute, useRouter } from "vue-router";
+import { get, isNil, pull } from "lodash";
 
 import { PAGINATOR_CTX_KEY } from "./paginator.vue";
 import { useAxios } from "../plugins/axios";
 
 export default defineComponent({
-  name: "eg-column-actions--inner",
+  name: "EgColumnActionsInner",
   props: {
     idProp: { type: String, required: true },
     row: { type: Object, required: true },
-    // eslint-disable-next-line prettier/prettier
-    noUpdate: [Boolean, Function] as PropType<((row: any) => boolean) | boolean>,
-    // eslint-disable-next-line prettier/prettier
-    noDelete: [Boolean, Function] as PropType<((row: any) => boolean) | boolean>,
+    noUpdate: {
+      type: [Boolean, Function] as PropType<((row: any) => boolean) | boolean>,
+      default: undefined,
+    },
+    noDelete: {
+      type: [Boolean, Function] as PropType<((row: any) => boolean) | boolean>,
+      default: undefined,
+    },
   },
   emits: {
     "row-deleted": (row: any) => row,

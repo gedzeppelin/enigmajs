@@ -1,53 +1,56 @@
-// TODO fix this
+import { ElMessage } from "element-plus";
+import { Ref, UnwrapRef, ref, watch } from "vue";
+import { t } from "../options";
 
-export * from "./formatters";
-export * from "./rules";
+/**
+ * Returns an internal ref value that that replicates `modelValue` with a watcher on it.
+ *
+ * @param modelValue The modelValue prop.
+ * @return The internal ref value.
+ */
+export function intRef<T>(
+  modelValue: T | undefined,
+  emit: (event: "change", value: T | undefined) => void
+): Ref<T | undefined>;
 
-import { Ref } from "vue";
-import { ElLoading, ElMessage } from "element-plus";
+/**
+ * Returns an internal ref value that that replicates `modelValue` with a watcher on it.
+ *
+ * @param modelValue The modelValue prop.
+ * @param initial The initial value.
+ * @return The internal ref value.
+ */
+export function intRef<T>(
+  modelValue: T | undefined,
+  emit: (event: "change", value: T) => void,
+  initial: T
+): Ref<UnwrapRef<T>>;
 
-import { store } from "@/store";
+/**
+ * Returns an internal ref value that that replicates `modelValue` with a watcher on it.
+ *
+ * @param modelValue The modelValue prop.
+ * @param initial The initial value (if any).
+ * @return The internal ref value.
+ */
+export function intRef<T = unknown>(
+  modelValue: T | undefined,
+  emit: (event: "change", value: unknown) => void,
+  initial?: T
+): Ref<UnwrapRef<T>> | Ref<T | undefined> | Ref<T> {
+  const internal = initial ? ref<T>(initial) : ref<T>();
 
-import router from "@/router";
+  watch(
+    () => modelValue,
+    (value) => {
+      if (internal.value !== value) {
+        internal.value = value;
+        emit("change", internal.value);
+      }
+    }
+  );
 
-import { LS_I18N_KEY, loadMessages, locale, t } from "../defaults";
-import { AxiosInstance } from "axios";
-
-export function updateTitle(): void {
-  const name = router.currentRoute.value.name?.toString();
-  const title = !name ? t("app.default_title") : t(`nav.${name}`);
-  document.title = `${title} - Taqi`;
-}
-
-export async function updateLocale(
-  axios: AxiosInstance,
-  value: string
-): Promise<void> {
-  localStorage.setItem(LS_I18N_KEY, value);
-
-  await loadMessages(value);
-  locale.value = value;
-
-  document.querySelector("html")?.setAttribute("lang", value);
-  axios.defaults.headers["Accept-Language"] =
-    value === "es" ? value : `${value},es;q=0.5`;
-
-  store.state.i18n.formReset?.();
-}
-
-export async function changeLocale(
-  axios: AxiosInstance,
-  value: string
-): Promise<void> {
-  const loading = ElLoading.service({
-    lock: true,
-    background: "rgba(0, 0, 0, 0.75)",
-  });
-
-  await updateLocale(axios, value);
-  updateTitle();
-
-  loading.close();
+  return internal;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -79,3 +82,6 @@ export function rvf(form: Ref<any | undefined>, fn: () => void): void {
     }
   });
 }
+
+export * from "./formatters";
+export * from "./rules";

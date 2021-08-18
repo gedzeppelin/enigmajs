@@ -15,19 +15,21 @@ el-table-column(v-bind="$attrs", align="center")
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { defineComponent, PropType } from "vue";
 
-import EgColumnUpdateInner from "../column-update--inner.vue";
+import EgColumnUpdateInner from "./column-update--inner.vue";
 
 export default defineComponent({
-  name: "eg-column-update",
+  name: "EgColumnUpdate",
   components: { "eg-column-update--inner": EgColumnUpdateInner },
+  props: {
+    idProp: { type: String, default: "id" },
+    disabled: {
+      type: [Boolean, Function] as PropType<((row: any) => boolean) | boolean>,
+      default: undefined,
+    },
+  },
   emits: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     change: (row: any) => row,
-  },
-  props: {
-    idProp: { type: String, default: "id" },
-    // eslint-disable-next-line prettier/prettier
-    disabled: [Boolean, Function] as PropType<((row: any) => boolean) | boolean>,
   },
 });
 </script>

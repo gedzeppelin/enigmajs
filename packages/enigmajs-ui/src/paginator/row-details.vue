@@ -27,7 +27,7 @@ el-table-column(type="expand")
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import { useI18n } from "vue-i18n";
+import { useI18n } from "../plugins/i18n";
 
 import JsonTree from "vue-json-tree";
 
@@ -35,7 +35,7 @@ const imageTabKey = "eg-row-details.image.tab";
 const tabKey = "eg-row-details.no_image.tab";
 
 export default defineComponent({
-  name: "eg-row-details",
+  name: "EgRowDetails",
   components: { JsonTree },
   props: {
     hasImage: {

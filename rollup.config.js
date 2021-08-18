@@ -3,6 +3,7 @@ import path from "path";
 
 import typescript from "rollup-plugin-typescript2";
 import { terser } from "rollup-plugin-terser";
+import { when, format } from "rollup-plugin-by-output";
 
 if (!process.env.TARGET) {
   throw new Error("TARGET package must be specified via --environment flag.");
@@ -31,29 +32,39 @@ export default {
       format: "es",
     },
     {
-      file: resolve(pkg.unpkg),
+      file: resolve(pkg.unpkg || pkg.jsdelivr || pkg.global),
       format: "iife",
       name: "EgCore",
       globals: {
-        vue: "Vue",
         lodash: "_",
         notyf: "Notyf",
-        uuid: "uuid",
         axios: "axios",
       },
     },
   ],
-  external: [...Object.keys(pkg.dependencies || {})],
+  external: Object.keys(pkg.dependencies),
   plugins: [
-    typescript(),
-    terser({
-      compress: {
-        ecma: 2015,
-        pure_getters: true,
-        // Fixes errors with inherited class initializations.
-        sequences: false,
+    typescript({
+      tsconfigOverride: {
+        compilerOptions: {
+          rootDir: resolve("src"),
+          outDir: resolve("dist"),
+          declaration: true,
+        },
+        include: ["packages/enigmajs-core/src"],
       },
-      safari10: true,
     }),
+    when(
+      format("iife"),
+      terser({
+        compress: {
+          ecma: 2015,
+          pure_getters: true,
+          // Fixes errors with inherited class initializations.
+          sequences: false,
+        },
+        safari10: true,
+      })
+    ),
   ],
 };

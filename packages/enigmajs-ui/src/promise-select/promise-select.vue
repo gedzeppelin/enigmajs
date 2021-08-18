@@ -36,26 +36,30 @@ import {
   inject,
   Ref,
 } from "vue";
-import { useI18n } from "vue-i18n";
-import { elFormItemKey } from "element-plus/lib/el-form";
-import { NotifyKinds, Paginator, purgeObject } from "enigmajs-core";
-import { get, isEmpty, isEqual, isNil } from "lodash";
+import { elFormItemKey } from "element-plus/packages/form/src/token";
+import { cloneDeep, get, isEmpty, isEqual, isNil } from "lodash";
 import { AxiosRequestConfig } from "axios";
 
-import { CACHE_MANAGER_KEY } from "../create-update";
 import { useAxios } from "../plugins/axios";
+import { useI18n } from "../plugins/i18n";
+
+import { NotifyKinds, Paginator, purgeObject } from "enigmajs-core";
+import { CACHE_MANAGER_KEY } from "../create-update";
 
 type ModelValue = string | number | null | (string | number)[];
 
 export default defineComponent({
-  name: "eg-promise-select",
+  name: "EgPromiseSelect",
   props: {
-    modelValue: [String, Number, Array] as PropType<ModelValue>,
+    modelValue: {
+      type: [String, Number, Array] as PropType<ModelValue>,
+      default: undefined,
+    },
     searchable: { type: Boolean, default: true },
 
     loading: Boolean,
     disabled: { type: Boolean, default: false },
-    placeholder: String,
+    placeholder: { type: String, default: undefined },
     width: { type: String, default: "100%" },
 
     paginated: { type: Boolean, default: true },
@@ -63,7 +67,10 @@ export default defineComponent({
 
     autoFetch: { type: Boolean, default: true },
     fetchOnStart: { type: Boolean, default: true },
-    requestConfig: Object as PropType<AxiosRequestConfig>,
+    requestConfig: {
+      type: Object as PropType<AxiosRequestConfig>,
+      default: undefined,
+    },
     source: {
       type: String,
       required: true,
@@ -71,11 +78,17 @@ export default defineComponent({
     },
 
     initialSelected: { type: Boolean, default: true },
-    selected: [String, Number, Array] as PropType<ModelValue>,
-    self: [String, Number],
+    selected: {
+      type: [String, Number, Array] as PropType<ModelValue>,
+      default: undefined,
+    },
+    self: { type: [String, Number], default: undefined },
 
     multiple: { type: Boolean, default: false },
-    multipleFilter: Object as PropType<Record<string, unknown>>,
+    multipleFilter: {
+      type: Object as PropType<Record<string, unknown>>,
+      default: undefined,
+    },
 
     valueProp: { type: String, default: "id" },
     labelProp: {
@@ -99,7 +112,7 @@ export default defineComponent({
       return ref<any[]>([]);
     })();
 
-    const initial = props.modelValue ?? props.multiple ? [] : null;
+    const initial = props.modelValue ?? (props.multiple ? [] : null);
     const internal = ref<ModelValue>(initial);
 
     watch(
@@ -286,7 +299,6 @@ export default defineComponent({
      *
      */
     async function selectionStart() {
-      const paginated = props.paginated;
       const request: AxiosRequestConfig = {
         method: "GET",
         url: props.source,
@@ -298,8 +310,8 @@ export default defineComponent({
           if (props.multipleFilter) {
             const purgedFilter = purgeObject(props.multipleFilter);
             if (!isEmpty(purgedFilter)) {
-              return axios.getResponse({
-                paginated: paginated,
+              return axios.fetchResponse({
+                paginated: props.paginated,
                 request: {
                   url: `${props.source}/`,
                   params: { page_size: 25, ...purgedFilter },
@@ -309,8 +321,8 @@ export default defineComponent({
           } else if (props.selected || props.modelValue) {
             const current = (props.selected ?? props.modelValue) as unknown[];
 
-            return axios.getResponse({
-              paginated: paginated,
+            return axios.fetchResponse({
+              paginated: props.paginated,
               request: {
                 url: `${props.source}/`,
                 params: { page_size: 25, ids: current.join(",") },
@@ -318,7 +330,7 @@ export default defineComponent({
             });
           }
         } else if (props.selected || props.modelValue) {
-          return axios.getResponse({
+          return axios.fetchResponse({
             request: `${props.source}/${props.selected ?? props.modelValue}/ `,
           });
         }
@@ -333,8 +345,8 @@ export default defineComponent({
           notify: props.notify,
           requests: [
             selectionPromise,
-            axios.getResponse({
-              paginated: paginated,
+            axios.fetchResponse({
+              paginated: props.paginated,
               request: props.requestConfig
                 ? Object.assign(request, props.requestConfig)
                 : request,
@@ -357,12 +369,14 @@ export default defineComponent({
             }
 
             if (!isEqual(internal.value, items.value)) {
-              internal.value = items.value.map((x) => get(x, props.valueProp));
+              internal.value = props.multiple
+                ? items.value.map((x) => get(x, props.valueProp))
+                : get(items.value[0], props.valueProp);
             } else if (
               !isNil(props.selected) &&
               !isEqual(internal.value, props.selected)
             ) {
-              internal.value = props.selected as ModelValue;
+              internal.value = cloneDeep(props.selected);
             }
 
             if (!isEqual(internal.value, props.modelValue)) {

@@ -1,33 +1,44 @@
 import { inject, InjectionKey, Plugin } from "vue";
 import { EgAxiosInstance, createAxios } from "enigmajs-core";
 
-import { defaults } from "../defaults";
-import { store } from "@/store";
+import { AxiosRequestConfig } from "axios";
 
-export const axiosKey: InjectionKey<EgAxiosInstance> = Symbol("axios");
+import { options } from "../options";
+import deepMerge from "deepmerge";
+
+// TODO fix auth token
+//import { store } from "@/store";
+
+export const axiosKey: InjectionKey<EgAxiosInstance> = Symbol("eg-axios");
 
 export function useAxios(): EgAxiosInstance {
   const injected = inject(axiosKey);
   if (!injected) {
-    throw new Error("axios plugin was not used in main.ts");
+    throw new Error("axios plugin was not used in main file");
   }
   return injected;
 }
 
-export const axios = createAxios({
-  baseURL: process.env.VUE_APP_BASE_URL,
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-    ...(defaults.locale ? { "Accept-Language": defaults.locale.value } : {}),
-  },
-});
+//export const axios = createAxios();
 
-export default (function (app) {
-  if (store.state.auth.payload) {
+const plugin: Plugin = (app, opts: AxiosRequestConfig) => {
+  /* if (store.state.auth.payload) {
     const access = store.state.auth.payload?.access;
     axios.defaults.headers["Authorization"] = `Bearer ${access}`;
-  }
+  } */
+
+  const defaults: AxiosRequestConfig = {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  };
+
+  /* if (options?.locale?.value) {
+    defaults.headers["Accept-Language"] = options.locale.value;
+  } */
+
+  const axios = createAxios(opts ? deepMerge(defaults, opts) : defaults);
 
   axios.interceptors.request.use((config) => {
     if (config.method === "GET") {
@@ -38,4 +49,6 @@ export default (function (app) {
   });
 
   app.provide(axiosKey, axios);
-} as Plugin);
+};
+
+export default plugin;

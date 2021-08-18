@@ -29,7 +29,7 @@ export interface IFormI18n {
 
   validate(opts?: IValidate): Promise<boolean>;
   validateField(opts: IValidateField): void;
-  resetFields: (inner?: boolean) => void;
+  resetFields(inner?: boolean): void;
   clearValidate(opts?: IClearValidate): void;
 }
 

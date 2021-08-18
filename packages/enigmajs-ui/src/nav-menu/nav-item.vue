@@ -1,10 +1,15 @@
 <template lang="pug">
 template(v-for="(item, idx) in drawerData")
-  el-submenu.eg-nav-item(v-if="item.children", :index="getIndex(idx)")
+  el-submenu.eg-nav-item(v-if="isGroup(item)", :index="getIndex(idx)")
     template(v-slot:title) 
       i(v-if="item.icon", :class="[item.icon]")
       span {{ getTitle(item.title) }}
-    el-menu-item-group
+    eg-nav-item(
+      :before="getIndex(idx)",
+      :collapse="collapse",
+      :drawer-data="item.children"
+    )
+    // el-menu-item-group
       template(v-if="navCollapsed", v-slot:title) {{ getTitle(item.title) }}
       eg-nav-item(
         :before="getIndex(idx)",
@@ -19,18 +24,17 @@ template(v-for="(item, idx) in drawerData")
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { useI18n } from "vue-i18n";
-
-import { DrawerGroup, DrawerItem } from ".";
+import { useI18n } from "../plugins/i18n";
+import { DrawerData, DrawerGroup, DrawerItem } from ".";
 
 export default defineComponent({
-  name: "eg-nav-item",
+  name: "EgNavItem",
   props: {
     drawerData: {
-      type: Array as PropType<(DrawerGroup & DrawerItem)[]>,
+      type: Array as PropType<DrawerData>,
       required: true,
     },
-    navCollapsed: { type: Boolean, required: true },
+    collapse: { type: Boolean, required: true },
     before: { type: String, default: "" },
   },
   setup(props) {
@@ -41,6 +45,9 @@ export default defineComponent({
         typeof title === "function" ? title() : t(title),
       getIndex: (idx: number) =>
         props.before ? `${props.before}-${idx}` : String(idx),
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      isGroup: (item: any): item is DrawerGroup => Array.isArray(item.children),
     };
   },
 });

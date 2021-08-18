@@ -23,15 +23,16 @@
 
 <script lang="ts">
 import { defineComponent, inject, PropType, ref, watch } from "vue";
-import { useI18n } from "vue-i18n";
+
+import { useI18n } from "../plugins/i18n";
 import { isNil } from "lodash";
 
 import { IFileInput, INTERNAL_KEY, MUTATE_INTERNAL_KEY, ModelValue } from ".";
 
 export default defineComponent({
-  name: "eg-file-input",
+  name: "EgFileInput",
   props: {
-    modelValue: Object as PropType<ModelValue>,
+    modelValue: { type: Object as PropType<ModelValue>, default: undefined },
 
     activeClass: { type: String, default: "is-not-empty" },
     accept: { type: String, default: "image/*" },

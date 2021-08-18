@@ -1,10 +1,10 @@
 import { h, defineComponent, VNode } from "vue";
-import { useI18n } from "vue-i18n";
+import { useI18n } from "../plugins/i18n";
 
-import EgObjectTreeNested from "./object-tree--nested";
+// import EgObjectTreeNested from "./object-tree--nested";
 
 export default defineComponent({
-  name: "eg-object-tree",
+  name: "EgObjectTree",
   props: {
     obj: {
       type: Object,
@@ -93,7 +93,7 @@ export default defineComponent({
     function renderObject(obj: Record<string, any>, deep: number): VNode[] {
       return Object.entries(obj).map(([key, value]) =>
         value && typeof value === "object"
-          ? h(EgObjectTreeNested, {
+          ? h(/* EgObjectTreeNested */ "div", {
               label: key,
               obj: value,
               deep: deep,

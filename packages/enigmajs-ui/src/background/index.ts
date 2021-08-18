@@ -1,7 +1,7 @@
-import { h, defineComponent } from "vue";
+import { h, defineComponent, App } from "vue";
 
-export default defineComponent({
-  name: "eg-background",
+const egBackground = defineComponent({
+  name: "EgBackground",
   props: {
     url: {
       type: String,
@@ -27,3 +27,9 @@ export default defineComponent({
       );
   },
 });
+
+egBackground.install = (app: App) => {
+  app.component(egBackground.name, egBackground);
+};
+
+export default egBackground;

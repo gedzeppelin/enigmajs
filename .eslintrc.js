@@ -3,19 +3,18 @@ module.exports = {
   env: {
     node: true,
   },
-  extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-  ],
-  parser: "@typescript-eslint/parser",
-  plugins: ["@typescript-eslint", "prettier"],
+  parser: "vue-eslint-parser",
   parserOptions: {
+    parser: "@typescript-eslint/parser",
     ecmaVersion: 2020,
   },
+  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  plugins: ["@typescript-eslint", "prettier"],
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "error" : "warn",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+    "no-var": "error",
+    "prettier/prettier": "warn",
   },
   overrides: [
     {
@@ -24,19 +23,18 @@ module.exports = {
         "**/tests/unit/**/*.spec.{j,t}s?(x)",
       ],
       env: {
-        mocha: true,
+        jest: true,
       },
     },
     {
-      files: ["./*.{j,t}s", "packages/*/src/**/*.{j,t}s"],
+      files: [
+        "packages/enigmajs-ui/src/**/*.{j,t}s?(x)",
+        "packages/enigmajs-ui/src/**/*.vue",
+      ],
       extends: [
-        "plugin:vue/vue3-essential",
         "eslint:recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
-        "@vue/typescript/recommended",
-        "@vue/prettier",
-        "@vue/prettier/@typescript-eslint",
+        "plugin:vue/vue3-recommended",
       ],
     },
   ],

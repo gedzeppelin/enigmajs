@@ -3,6 +3,9 @@ import { NotifyKinds, NotifyType } from "./response";
 import { Notyf } from "notyf";
 import { assignWith, isUndefined } from "lodash";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type T = (...args: any[]) => string;
+
 interface Notifier {
   success(payload: string): void;
   error(payload: string): void;
@@ -16,10 +19,10 @@ interface Defaults {
   notify: NotifyKinds;
   notifyType: NotifyType;
 
-  successLabel: string | (() => string);
-  errorLabel: string | (() => string);
-  successMessage: string | (() => string);
-  errorMessage: string | (() => string);
+  successLabel: string | T;
+  errorLabel: string | T;
+  successMessage: string | T;
+  errorMessage: string | T;
 }
 
 export const defaults: Defaults = {

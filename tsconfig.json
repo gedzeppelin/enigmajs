@@ -23,7 +23,7 @@
     "packages/*/src",
   ],
   "exclude": [
-    "dist",
+    "packages/*/dist",
     "**/node_modules",
     "**/tests",
   ],

@@ -49,6 +49,7 @@ el-card(shadow="never")
   eg-promise-section(
     ref="promiseSection",
     v-bind="$attrs",
+    :loading-height="400",
     :paginated="paginated",
     :query-params="qParams",
     :source="source",
@@ -59,12 +60,12 @@ el-card(shadow="never")
   )
     template(v-slot="{ ok }")
       el-row(justify="center", type="flex")
-        el-col.mb-4(:span="12")
+        el-col.mb-4(:span="24")
           el-pagination.text-center(
             v-if="ok",
             v-model:currentPage="qParams.page",
-            v-model:page-size="qParams.page_size",
-            :layout="paginated ? 'total, sizes, prev, pager, next, jumper' : 'total'",
+            v-model:pageSize="qParams.page_size",
+            :layout="paginated ? (xs ? 'prev, pager, next' : 'total, sizes, prev, pager, next, jumper') : 'total'",
             :page-sizes="pageSizes",
             :total="ok.count"
           )
@@ -95,13 +96,15 @@ import {
   Paginator,
   purgeObject,
   Response,
-  Target,
 } from "enigmajs-core";
 
 import { useRoute, useRouter } from "vue-router";
-import { useI18n } from "vue-i18n";
+import { useI18n } from "../plugins/i18n";
 
 import { INTERNAL_KEY, MUTATE_INTERNAL_KEY } from "../promise-section";
+import { Target } from "../types";
+import { useViewport } from "../viewport";
+import { ElPagination } from "element-plus";
 
 interface QueryParams {
   page: number;
@@ -124,30 +127,37 @@ type IContextKey = InjectionKey<PaginatorContext>;
 export const PAGINATOR_CTX_KEY: IContextKey = Symbol("eg.paginator.context");
 
 export default defineComponent({
-  name: "eg-paginator",
+  name: "EgPaginator",
+  components: {
+    "el-pagination": ElPagination,
+  },
   props: {
-    modelValue: Object as PropType<Response<Paginator>>,
+    modelValue: {
+      type: Object as PropType<Response<Paginator>>,
+      default: undefined,
+    },
 
     source: { type: String, required: true },
-    queryParams: Object as PropType<Target>,
+    queryParams: { type: Object as PropType<Target>, default: undefined },
     paginated: { type: Boolean, default: true },
     pageSizes: {
       type: Array as PropType<number[]>,
       default: () => [5, 10, 15, 20, 25, 50],
     },
-    updateUrl: String,
-    deleteUrl: String,
+    updateUrl: { type: String, default: undefined },
+    deleteUrl: { type: String, default: undefined },
 
     followLocale: { type: Boolean, default: true },
     createPath: { type: String, default: "create" },
     noCreate: { type: Boolean, default: false },
-    editPath: String,
+    editPath: { type: String, default: undefined },
   },
   emits: ["update:modelValue", "change"],
   setup(props, { emit }) {
     const route = useRoute();
     const router = useRouter();
     const { t } = useI18n();
+    const { xs } = useViewport();
 
     // SECTION Internal value.
 
@@ -243,6 +253,7 @@ export default defineComponent({
       ctx,
       debounceSearch,
       instantSearch,
+      xs,
       loading,
       onOk,
       promiseSection,

@@ -1,7 +1,7 @@
 import Schema from "async-validator";
 import type { RuleItem as _RuleItem } from "async-validator";
 
-import { t } from "../defaults";
+import { t } from "../options";
 
 interface RuleItem extends _RuleItem {
   trigger?: "change" | "blur";

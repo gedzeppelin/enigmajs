@@ -3,7 +3,7 @@ import { h, defineComponent, VNode, ref } from "vue";
 import EgObjectTree from "./object-tree";
 
 export default defineComponent({
-  name: "eg-object-tree--nested",
+  name: "EgObjectTreeNested",
   components: { EgObjectTree },
   props: {
     label: {

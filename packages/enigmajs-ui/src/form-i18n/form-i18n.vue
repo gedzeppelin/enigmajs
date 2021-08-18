@@ -5,99 +5,119 @@ eg-promise-section(
   @ok="onOk",
   source="/languages"
 )
-  el-tabs.eg-i18n-form(ref="elTabs", v-model="currentTab", type="card")
-    el-tab-pane.pa-4(
-      v-for="item in internal",
-      :class="{ 'is-not-default': !item.isDefault, 'is-auto': item.isAuto }",
-      :name="item.lang.code"
-    )
+  el-tabs.eg-i18n-form(
+    ref="elTabs",
+    v-model="currentTab",
+    :class="{ 'is-all-auto': isAllAuto }",
+    type="card"
+  )
+    el-tab-pane.pa-4(v-for="item in internal", :name="item.lang.code")
       template(v-slot:label)
         .eg-i18n-form__tab-item(
-          :class="{ 'is-all-auto': isAllAuto, 'is-auto': item.isAuto, 'is-not-default': !item.isDefault }"
+          :class="{ 'is-auto': item.isAuto, 'is-default': item.isDefault }"
         )
           span.mr-2 {{ t(`lang.${item.lang.code}`) }}
-          el-popover(
-            :title="item.isDefault ? t('eg.i18n_form.translate_all_auto') : t('eg.i18n_form.translate_auto')",
-            :width="375",
-            placement="top-start",
-            popper-class="eg-i18n-form",
-            trigger="hover"
+          el-switch(
+            v-if="item.isDefault",
+            v-model="item.isAuto",
+            :disabled="item.isLoading",
+            @change="onChangeDefault",
+            @click.stop
           )
-            template(v-slot:default)
-              template(v-if="item.isDefault")
+          el-switch(
+            v-else,
+            v-model="item.isAuto",
+            :disabled="item.isLoading || isAllAuto",
+            @click.stop
+          )
+
+      template(v-slot:default)
+        .eg-i18n-form__content(
+          :class="{ 'is-auto': item.isAuto, 'is-default': item.isDefault }"
+        )
+          .content-header
+            span
+              el-popover(
+                :placement="xs ? 'bottom' : 'left'",
+                :title="item.isDefault ? t('eg.i18n_form.translate_all_auto') : t('eg.i18n_form.translate_auto')",
+                :width="xs ? 300 : 350",
+                popper-class="eg-i18n-form",
+                trigger="click"
+              )
+                template(v-slot:reference)
+                  i.el-icon-info.mr-2.info
+
+                template(v-if="item.isDefault")
+                  i18n-t(
+                    keypath="eg.i18n_form.popover_content_def",
+                    scope="global",
+                    tag="div"
+                  )
+                    b.text-all-auto {{ t('eg.i18n_form.this_lang') }}
+                    b.text-primary {{ t('eg.i18n_form.other_lang') }}
+                  br
+                  b.text-all-auto {{ t('lang.default_lang') }}
+                template(v-else)
+                  i18n-t(
+                    keypath="eg.i18n_form.popover_content",
+                    scope="global",
+                    tag="div"
+                  )
+                    b.text-all-auto {{ tl(`lang.${defaultLang}`) }}
+                    b.text-primary {{ tl(`lang.${item.lang.code}`) }}
+                  br
+
                 i18n-t(
-                  keypath="eg.i18n_form.popover_content_def",
+                  v-if="isAllAuto",
+                  :class="['text-all-auto']",
+                  keypath="eg.i18n_form.popover_is_all_auto",
                   scope="global",
                   tag="div"
                 )
-                  b.text-all-auto {{ t('eg.i18n_form.this_lang') }}
-                  b.text-primary {{ t('eg.i18n_form.other_lang') }}
-                br
-                b.text-all-auto {{ t('lang.default_lang') }}
-
-              i18n-t(
-                v-else,
-                keypath="eg.i18n_form.popover_content",
-                scope="global",
-                tag="div"
-              )
-                b.text-all-auto {{ t(`lang.${defaultLang}`).toLowerCase() }}
-                b.text-primary {{ t(`lang.${item.lang.code}`).toLowerCase() }}
-
-              span.text-all-auto(v-if="isAllAuto")
-                br
-                i18n-t(
-                  keypath="eg.i18n_form.popover_is_all_auto",
-                  scope="global"
-                )
                   b {{ t('eg.i18n_form.translate_all_auto') }}
-            template(v-slot:reference)
-              el-switch(
-                v-if="item.isDefault",
-                v-model="item.isAuto",
-                :disabled="item.isLoading",
-                @change="onChangeDefault",
-                @click.stop
-              )
-              el-switch(
-                v-else,
-                v-model="item.isAuto",
-                :disabled="item.isLoading || isAllAuto",
-                @click.stop
-              )
+                i18n-t(
+                  v-else-if="item.isAuto",
+                  :class="['text-primary']",
+                  keypath="eg.i18n_form.popover_is_all_auto",
+                  scope="global",
+                  tag="div"
+                )
+                  b {{ t('eg.i18n_form.translate', { lang: tl(`lang.${defaultCode}`) }) }}
+                div(v-else) {{ t('eg.i18n_form.translate_deactivated') }}
 
-      template(v-slot:default)
-        el-form(
-          :model="item.target",
-          :ref=`
-            // @ts-ignore 
-            (el) => (forms[item.lang.code] = el)
-          `,
-          :rules="rules"
-        )
-          .eg-i18n-form__content-header
-            b.lang-name {{ t(`lang.${item.lang.code}`) }}
+              b.lang-name {{ t(`lang.${item.lang.code}`) }}
+              span.def-lang.ml-2(v-if="item.isDefault") ({{ t('lang.default_lang') }})
+
             span.lang-pre {{ t('eg.i18n_form.form_header') }}
               b.lang-id {{ item.lang.id }}
           el-divider.my-2
-          template(v-for="(tVal, tKey) in item.target")
-            el-form-item(
-              v-if="isString(tVal)",
-              :label="t(`${i18nPrefix}.${String(tKey)}`)",
-              :prop="tKey"
-            )
-              el-input(
-                v-if="!item.isDefault && (isAllAuto || item.isAuto)",
-                v-model="item.target[tKey]",
-                :placeholder="makePlaceholder(String(tKey))",
-                disabled
+          el-form(
+            :label-width="labelWidth",
+            :model="item.target",
+            :ref=`
+                // @ts-ignore 
+                (el) => (forms[item.lang.code] = el)
+              `,
+            :rules="rules"
+          )
+            template(v-for="(tVal, tKey) in item.target")
+              el-form-item(
+                v-if="isString(tVal)",
+                :label="t(`${i18nPrefix}.${String(tKey)}`)",
+                :prop="tKey"
               )
-              el-input(v-else, v-model="item.target[tKey]")
-        .text-center(v-if="item.isAuto && !item.isDefault")
-          el-button(
-            :loading="item.isLoading",
-            @click="translate([item.lang.code])"
-          ) {{ t('eg.i18n_form.translate_now') }}
+                el-input(
+                  v-if="!item.isDefault && (isAllAuto || item.isAuto)",
+                  v-model="item.target[tKey]",
+                  :placeholder="makePlaceholder(String(tKey))",
+                  disabled
+                )
+                el-input(v-else, v-model="item.target[tKey]")
+          .text-center(v-if="item.isAuto && !item.isDefault")
+            el-button(
+              :loading="item.isLoading",
+              @click="translate([item.lang.code])"
+            ) {{ t('eg.i18n_form.translate_now') }}
 </template>
 
 <script lang="ts">
@@ -108,17 +128,12 @@ import {
   reactive,
   ref,
   watchEffect,
+  computed,
 } from "vue";
+
+import { Paginator, Ok } from "enigmajs-core";
 import { ElMessage } from "element-plus";
-
-import { useI18n } from "vue-i18n";
-
-import { Paginator, Ok, Target } from "enigmajs-core";
-
-import { IClearValidate, IForm, IFormI18n, IValidate, IValidateField } from ".";
-import { IFORM_KEY, Rules } from "..";
-import { useAxios } from "../plugins/axios";
-
+import { useI18n } from "../plugins/i18n";
 import {
   clone,
   forOwn,
@@ -130,37 +145,19 @@ import {
   pickBy,
 } from "lodash";
 
-// TODO make interfaces dynamic
+import { useAxios } from "../plugins/axios";
 
-interface Lang {
-  id: number;
-  name: string;
-  code: string;
-  is_active: boolean;
-}
+import { IClearValidate, IForm, IFormI18n, IValidate, IValidateField } from ".";
+import { IFORM_KEY, Rules } from "..";
+import { useViewport } from "../viewport";
 
-interface I18nFormItem {
-  isAuto: boolean;
-  isDefault: boolean;
-  isLoading: boolean;
-  lang: Lang;
-  target: Target;
-}
-
-interface I18nRequest {
-  text: string[];
-  from_lang: string;
-  to_lang: string[];
-}
-
-interface I18nItem {
-  translations: {
-    text: string;
-    to: string;
-  }[];
-}
-
-type I18nResponse = I18nItem[];
+import {
+  I18nFormItem,
+  I18nRequest,
+  I18nResponse,
+  Lang,
+  Target,
+} from "../types";
 
 type Internal = Record<string, I18nFormItem>;
 type Forms = Record<string, IForm>;
@@ -168,17 +165,18 @@ type Forms = Record<string, IForm>;
 const autoIfUpdateKey = "eg-for-i18n.auto_if_update";
 
 export default defineComponent({
-  name: "eg-form-i18n",
+  name: "EgFormI18n",
   props: {
     loadingHeight: { type: [String, Number], default: 350 },
+    labelWidth: { type: [String, Number], default: "100px" },
     defaultLang: { type: String, default: "es" },
     i18nPrefix: { type: String, default: "cmn" },
 
-    fields: Array as PropType<string[]>,
-    target: Object as PropType<Target>,
-    items: Array as PropType<Target[]>,
+    fields: { type: Array as PropType<string[]>, default: undefined },
+    target: { type: Object as PropType<Target>, default: undefined },
+    items: { type: Array as PropType<Target[]>, default: undefined },
 
-    rules: Object as PropType<Rules>,
+    rules: { type: Object as PropType<Rules>, default: undefined },
     langProp: { type: String, default: "lang" },
     idProp: { type: String, default: "id" },
   },
@@ -186,6 +184,7 @@ export default defineComponent({
   setup(props, { emit, expose }) {
     const axios = useAxios();
     const { t, messages } = useI18n();
+    const { xs } = useViewport();
 
     const form = inject(IFORM_KEY, undefined);
     const forms = reactive<Forms>({});
@@ -578,10 +577,12 @@ export default defineComponent({
 
     return {
       currentTab,
+      emit,
       forms,
       internal,
       isAllAuto,
       isString,
+      xs,
       makePlaceholder,
       messages,
       onChangeDefault,
@@ -589,7 +590,9 @@ export default defineComponent({
       response,
       t,
       translate,
-      emit,
+
+      defaultCode: computed(() => internal[props.defaultLang]?.lang.code),
+      tl: (input: string) => t(input).toLocaleLowerCase(),
     };
   },
 });

@@ -50,32 +50,20 @@
 
 <script lang="ts">
 import { defineComponent, nextTick, onMounted, ref, inject } from "vue";
+
 import { elFormItemKey } from "element-plus/packages/form/src/token";
-import { useI18n } from "vue-i18n";
+import { useI18n } from "../plugins/i18n";
 import { isNil } from "lodash";
 
 import { useAxios } from "../plugins/axios";
 
-interface Ubigeo {
-  coddpto: number;
-  codprov: number;
-  coddist: number;
-  name: string;
-  is_dpto: boolean;
-  is_prov: boolean;
-  is_dist: boolean;
-  dpto_name: string;
-  prov_name: string;
-  dist_name: string;
-  is_active: boolean;
-}
-
+// TODO dynamic ubigeo id and name
 export default defineComponent({
-  name: "eg-ubigeo-select",
+  name: "EgUbigeoSelect",
   props: {
-    modelValue: [Number, String],
+    modelValue: { type: [Number, String], default: undefined },
 
-    selected: [Number, String],
+    selected: { type: [Number, String], default: undefined },
     initialSelected: { type: Boolean, default: true },
   },
   emits: ["update:modelValue"],
@@ -107,7 +95,7 @@ export default defineComponent({
       hasModel.value = true;
 
       onMounted(async () => {
-        await axios.buildResponse<Ubigeo>({
+        await axios.buildResponse({
           notify: false,
           request: `/ubigeos/${props.selected ?? props.modelValue}`,
           ifOk: async ({ payload }) => {

@@ -21,12 +21,12 @@
   "license": "MIT",
   "dependencies": {
     "async-validator": "^3.5.2",
+    "deepmerge": "^4.2.2",
     "element-plus": "^1.0.2-beta.70",
     "enigmajs-core": "^0.1.2",
     "lodash": "^4.17.21",
     "uuid": "^8.3.2",
     "vue": "^3.2.2",
-    "vue-i18n": "^9.1.7",
     "vue-json-tree": "^0.4.3",
     "vue-router": "^4.0.11"
   }

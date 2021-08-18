@@ -12,19 +12,21 @@ template(v-if="column.property")
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { defineComponent, ref, inject, PropType } from "vue";
+
+import { useAxios } from "../plugins/axios";
+import { PAGINATOR_CTX_KEY } from "./paginator.vue";
 import { get, isNil, set } from "lodash";
 
-import { PAGINATOR_CTX_KEY } from "./paginator.vue";
-import { useAxios } from "../plugins/axios";
-
 export default defineComponent({
-  name: "eg-column-update--inner",
+  name: "EgColumnUpdateInner",
   props: {
     idProp: { type: String, required: true },
     row: { type: Object, required: true },
     column: { type: Object as PropType<{ property?: string }>, required: true },
-    // eslint-disable-next-line prettier/prettier
-    disabled: [Boolean, Function] as PropType<((row: any) => boolean) | boolean>,
+    disabled: {
+      type: [Boolean, Function] as PropType<((row: any) => boolean) | boolean>,
+      default: undefined,
+    },
   },
   emits: {
     change: (row: any) => row,

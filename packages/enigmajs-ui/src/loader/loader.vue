@@ -1,7 +1,10 @@
 <template lang="pug">
-.eg-loader(:style="{ height: loaderHeight }")
+.eg-loader(:style="{ height: getSize(height), width: getSize(width) }")
   div
-    img.logo(:src="require('@/assets/logo.jpg')")
+    img(
+      :src="src",
+      :style="{ height: getSize(logoHeight), width: getSize(logoWidth) }"
+    )
     .spinner.mt-2
       .rect1
       .rect2
@@ -11,29 +14,22 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "eg-loader",
+  name: "EgLoader",
   props: {
-    height: { type: [String, Number], default: 400 },
+    src: { type: String, required: true },
+    height: { type: [String, Number], default: 250 },
+    width: { type: [String, Number], default: "auto" },
+    logoHeight: { type: [String, Number], default: 125 },
+    logoWidth: { type: [String, Number], default: 125 },
   },
-  setup(props) {
-    return {
-      loaderHeight: computed(() => {
-        const height = props.height;
-        if (typeof height === "number") {
-          return `${height}px`;
-        }
+  setup() {
+    const getSize = (input: string | number): string =>
+      typeof input === "number" ? `${input}px` : input;
 
-        const nHeight = Number(height);
-        if (!isNaN(nHeight)) {
-          return `${height}px`;
-        }
-
-        return height;
-      }),
-    };
+    return { getSize };
   },
 });
 </script>
@@ -41,20 +37,12 @@ export default defineComponent({
 <style lang="scss">
 .eg-loader {
   position: relative;
-  //height: 400px;
-  opacity: 0.75;
 
   & > div {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-  }
-
-  & .logo {
-    display: block;
-    width: 125px;
-    height: 125px;
   }
 }
 
@@ -72,8 +60,8 @@ export default defineComponent({
     margin-left: 2px;
     margin-right: 2px;
 
-    -webkit-animation: sk-stretch-delay 1.2s infinite ease-in-out;
-    animation: sk-stretch-delay 1.2s infinite ease-in-out;
+    -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
+    animation: sk-stretchdelay 1.2s infinite ease-in-out;
   }
 
   & .rect2 {
@@ -97,7 +85,7 @@ export default defineComponent({
   }
 }
 
-@-webkit-keyframes sk-stretch-delay {
+@-webkit-keyframes sk-stretchdelay {
   0%,
   40%,
   100% {
@@ -109,7 +97,7 @@ export default defineComponent({
   }
 }
 
-@keyframes sk-stretch-delay {
+@keyframes sk-stretchdelay {
   0%,
   40%,
   100% {

@@ -10,13 +10,15 @@ import {
   Ref,
 } from "vue";
 
-import { useI18n } from "vue-i18n";
+import { useI18n } from "../plugins/i18n";
 import { ElButton, ElLink } from "element-plus";
-import { Err, Response, Ok, purgeObject, Target } from "enigmajs-core";
+import { Err, Response, Ok, purgeObject } from "enigmajs-core";
 import { AxiosRequestConfig } from "axios";
 
 import EgLoader from "../loader";
 import { useAxios } from "../plugins/axios";
+
+import { Target } from "../types";
 
 type IRefreshKey = InjectionKey<() => Promise<void>>;
 export const REFRESH_KEY: IRefreshKey = Symbol("eg.promise_section.refresh");
@@ -28,18 +30,27 @@ type _MIKey = InjectionKey<(value: Response | undefined) => void>;
 export const MUTATE_INTERNAL_KEY: _MIKey = Symbol("promise-section.mutation");
 
 export default defineComponent({
-  name: "eg-promise-section",
+  name: "EgPromiseSection",
   props: {
-    modelValue: Object as PropType<Response | undefined>,
+    modelValue: {
+      type: Object as PropType<Response | undefined>,
+      default: undefined,
+    },
     source: { type: String, required: true },
 
     autoFetch: { type: Boolean, default: true },
-    requestOpts: Object as PropType<AxiosRequestConfig>,
-    queryParams: Object as PropType<Target>,
+    requestOpts: {
+      type: Object as PropType<AxiosRequestConfig>,
+      default: undefined,
+    },
+    queryParams: { type: Object as PropType<Target>, default: undefined },
     paginated: { type: Boolean, default: true },
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    mutation: Function as PropType<(el: any) => any>,
+    mutation: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      type: Function as PropType<(el: any) => any>,
+      default: undefined,
+    },
     followLocale: { type: Boolean, default: false },
 
     loadingHeight: { type: [String, Number], default: 400 },

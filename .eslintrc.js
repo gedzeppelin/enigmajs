@@ -8,7 +8,11 @@ module.exports = {
     parser: "@typescript-eslint/parser",
     ecmaVersion: 2020,
   },
-  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  extends: [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+  ],
   plugins: ["@typescript-eslint", "prettier"],
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "error" : "warn",
@@ -35,6 +39,7 @@ module.exports = {
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:vue/vue3-recommended",
+        "prettier",
       ],
     },
   ],

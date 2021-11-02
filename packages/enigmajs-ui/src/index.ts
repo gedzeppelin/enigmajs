@@ -1,47 +1,60 @@
-import { InjectionKey, Plugin, Ref } from "vue";
+import { Plugin, Ref } from "vue";
 import { Router } from "vue-router";
-
 import { AxiosRequestConfig } from "axios";
-import { isNil } from "lodash";
 
-import EgBackground from "./background";
-import EgCreateUpdate, { EgCreateUpdateI18n } from "./create-update";
-import EgFileInput, { EgImageInput } from "./file-input";
-import EgFormI18n, { IForm } from "./form-i18n";
-import EgLoader from "./loader";
-import EgNavMenu, { EgNavItem } from "./nav-menu";
-import EgObjectTree from "./object-tree";
-import EgPaginator, {
+import { setEgDefaults, T } from "enigmajs-core";
+
+import { EgBackground } from "./components/background";
+import { EgCreateUpdate, EgCreateUpdateI18n } from "./components/create-update";
+import { EgFileInput, EgImageInput } from "./components/file-input";
+import { EgFormI18n } from "./components/form-i18n";
+import { EgLoader } from "./components/loader";
+import { EgNavMenu, EgNavItem } from "./components/nav-menu";
+import { EgObjectTree } from "./components/object-tree";
+import {
+  EgPaginator,
   EgColumnActions,
   EgColumnUpdate,
   EgRowDetails,
-} from "./paginator";
-import EgPromiseSection from "./promise-section";
-import EgPromiseSelect from "./promise-select";
-import EgUbigeoSelect from "./ubigeo-select";
+} from "./components/paginator";
+import { EgPromiseSection } from "./components/promise-section";
+import { EgPromiseSelect } from "./components/promise-select";
+import { EgUbigeoSelect } from "./components/ubigeo-select";
 
-import axios from "./plugins/axios";
-import i18n from "./plugins/i18n";
-
-import { T } from "enigmajs-core";
 import { options } from "./options";
 
-interface PluginOpts {
-  axios?: AxiosRequestConfig;
-  t?: T;
+import axios from "./plugins/axios";
+import i18n, { defaultT } from "./plugins/i18n";
+import viewport from "./plugins/viewport";
 
-  router: Router;
+interface PluginOpts {
+  router?: Router;
+  axios?: AxiosRequestConfig;
+  i18n?: {
+    t?: T;
+    locale: Ref<string>;
+  };
 }
 
-const plugin: Plugin = (app, opts: PluginOpts) => {
-  if (isNil(opts?.router)) {
+const plugin: Plugin = (app, opts?: PluginOpts) => {
+  if (!opts?.router) {
     throw new Error("Vue router needs to be passed in options!");
   }
 
   options.router = opts.router;
+  options.t = opts.i18n?.t ?? defaultT;
+  options.locale = opts.i18n?.locale;
 
+  setEgDefaults({
+    successLabel: () => options.t("app.success"),
+    errorLabel: () => options.t("app.error"),
+    successMessage: () => options.t("app.default_success"),
+    errorMessage: () => options.t("app.default_error"),
+  });
+
+  app.use(viewport);
+  app.use(i18n, opts.i18n);
   app.use(axios, opts.axios);
-  app.use(i18n, opts.t);
 
   app.component(EgBackground.name, EgBackground);
   app.component(EgColumnActions.name, EgColumnActions);
@@ -62,16 +75,10 @@ const plugin: Plugin = (app, opts: PluginOpts) => {
   app.component(EgUbigeoSelect.name, EgUbigeoSelect);
 };
 
-type _IFKey = InjectionKey<Ref<IForm>>;
-export const IFORM_KEY: _IFKey = Symbol("eg.common.form");
-
-type _IEKey = InjectionKey<boolean>;
-export const IS_EDIT_KEY: _IEKey = Symbol("eg.create_update.isEdit");
-
 export * from "./cache";
-export * from "./utils";
-export * from "./viewport";
+export * from "./components/utils";
 
 export * from "./plugins/axios";
+export * from "./plugins/viewport";
 
 export default plugin;

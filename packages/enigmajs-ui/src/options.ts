@@ -1,15 +1,14 @@
-import { T } from "enigmajs-core";
-
+import { Router } from "vue-router";
 import { assignWith, isUndefined } from "lodash";
 
-import { Router } from "vue-router";
+import { T } from "enigmajs-core";
+
+import { Locale } from "./plugins/axios";
 
 interface Options {
-  appName?: string;
-  baseURL?: string;
-
   router: Router;
   t: T;
+  locale?: Locale;
 }
 
 export const options = {} as Options;
@@ -19,6 +18,3 @@ export function setOptions(opts: Partial<Options>): void {
     isUndefined(objValue) ? srcValue : objValue
   );
 }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const t: T = (...args: any[]) => options.t(...args);

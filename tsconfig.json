@@ -13,6 +13,7 @@
     "sourceMap": false,
     "strict": true,
     "target": "esnext",
+    "resolveJsonModule": true,
     "paths": {
       "enigmajs-core": [
         "packages/enigmajs-core/src"

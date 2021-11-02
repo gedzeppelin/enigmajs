@@ -2,7 +2,10 @@
   "name": "enigmajs-ui",
   "version": "0.1.2",
   "description": "EnigmaJS Vue UI component library",
-  "main": "dist/index.js",
+  "main": "dist/enigmajs-ui.cjs.js",
+  "module": "dist/enigmajs-ui.es.js",
+  "unpkg": "dist/enigmajs-ui.global.js",
+  "jsdelivr": "dist/enigmajs-ui.global.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist",
@@ -20,13 +23,14 @@
   "author": "Gedy Palomino",
   "license": "MIT",
   "dependencies": {
-    "async-validator": "^3.5.2",
+    "@element-plus/icons": "^0.0.11",
+    "async-validator": "^4.0.7",
     "deepmerge": "^4.2.2",
-    "element-plus": "^1.0.2-beta.70",
+    "element-plus": "^1.2.0-beta.1",
     "enigmajs-core": "^0.1.2",
     "lodash": "^4.17.21",
     "uuid": "^8.3.2",
-    "vue": "^3.2.2",
+    "vue": "^3.2.6",
     "vue-json-tree": "^0.4.3",
     "vue-router": "^4.0.11"
   }

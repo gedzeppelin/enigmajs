@@ -23,7 +23,7 @@
   "author": "Gedy Palomino",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.24.0",
     "lodash": "^4.17.21",
     "notyf": "^3.10.0"
   }

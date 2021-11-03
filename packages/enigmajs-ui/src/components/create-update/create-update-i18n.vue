@@ -11,7 +11,7 @@
               @click="goList"
             >
               <el-icon>
-                <back />
+                <icon-back />
               </el-icon>
             </el-button>
             <span>{{ t(`nav.${String(route.name)}`) }}</span>
@@ -130,15 +130,12 @@ import { Rules } from "../utils";
 import { EgCacheManager } from "../../cache";
 import { Target } from "../../types";
 
-import { Back } from "@element-plus/icons";
-
 function isParentRequest<T = any>(obj: unknown): obj is ParentRequest<T> {
   return typeof obj === "object" && obj !== null && "request" in obj;
 }
 
 export default defineComponent({
   name: "EgCuI18n",
-  components: { back: Back },
   props: {
     model: { type: Object as PropType<Target>, default: undefined },
     target: { type: Object as PropType<Target>, default: undefined },

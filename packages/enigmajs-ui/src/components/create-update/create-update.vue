@@ -7,10 +7,12 @@
             <el-button
               class="back-button"
               circle="circle"
-              icon="el-icon-back"
               small="small"
               @click="goList"
-            ></el-button
+            >
+              <el-icon>
+                <icon-back />
+              </el-icon> </el-button
             ><span>{{ t(`nav.${String(route.name)}`) }}</span>
           </div>
         </el-col>

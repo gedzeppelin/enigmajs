@@ -16,19 +16,23 @@ el-card(shadow="never")
           @clear="instantSearch",
           @input="debounceSearch",
           @keydown.enter="instantSearch",
-          clearable,
-          prefix-icon="el-icon-search"
+          clearable
         )
+          template(v-slot:prefix)
+            el-icon
+              icon-search
 
       el-col.is-last(:md="8", :span="24")
         slot(name="header-end-start")
         el-button(
           v-if="!loading",
           @click="promiseSection.refresh()",
-          icon="el-icon-refresh-right",
           plain,
           type="primary"
-        ) {{ t('cmn.refresh') }}
+        ) 
+          el-icon
+            icon-refresh-right
+          span {{ t('cmn.refresh') }}
         el-button.button-new(
           v-if="!noCreate",
           @click="buttonCreate",
@@ -36,7 +40,7 @@ el-card(shadow="never")
           type="success"
         ) 
           el-icon
-            plus
+            icon-plus
           span {{ t('crud.create') }}
         slot(name="header-end-end")
 
@@ -104,8 +108,6 @@ import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "../../plugins/i18n";
 import { useViewport } from "../../plugins/viewport";
 
-import { Plus } from "@element-plus/icons";
-
 import { INTERNAL_KEY, MUTATE_INTERNAL_KEY } from "../promise-section";
 import { Target } from "../../types";
 import { ElPagination } from "element-plus";
@@ -134,7 +136,6 @@ export default defineComponent({
   name: "EgPaginator",
   components: {
     "el-pagination": ElPagination,
-    plus: Plus,
   },
   props: {
     modelValue: {

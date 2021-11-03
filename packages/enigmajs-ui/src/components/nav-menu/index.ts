@@ -1,13 +1,13 @@
 export type DrawerData = (DrawerGroup | DrawerItem)[];
 
 export interface DrawerGroup {
-  icon?: string;
+  icon?: any;
   title: (() => string) | string;
   children: DrawerData;
 }
 
 export interface DrawerItem {
-  icon?: string;
+  icon?: any;
   title: (() => string) | string;
   path: string;
 }

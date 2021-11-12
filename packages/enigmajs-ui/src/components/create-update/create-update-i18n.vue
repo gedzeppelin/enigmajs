@@ -14,7 +14,7 @@
                 <icon-back />
               </el-icon>
             </el-button>
-            <span>{{ t(`nav.${String(route.name)}`) }}</span>
+            <span>{{ t(String(route.name)) }}</span>
           </div>
         </el-col>
 

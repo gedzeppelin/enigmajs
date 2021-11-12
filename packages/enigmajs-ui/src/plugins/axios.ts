@@ -76,7 +76,7 @@ const plugin: Plugin = (app, opts?: EgAxiosOptions) => {
 
   const locale = opts?.locale ?? options.locale;
 
-  console.log(opts?.locale, options.locale);
+  //console.log(opts?.locale, options.locale);
 
   if (locale) {
     if (isRef(locale)) {

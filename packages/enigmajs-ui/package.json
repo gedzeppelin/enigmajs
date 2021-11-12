@@ -26,7 +26,7 @@
     "@element-plus/icons": "^0.0.11",
     "async-validator": "^4.0.7",
     "deepmerge": "^4.2.2",
-    "element-plus": "^1.2.0-beta.1",
+    "element-plus": "^1.2.0-beta.3",
     "enigmajs-core": "^0.1.2",
     "lodash": "^4.17.21",
     "uuid": "^8.3.2",

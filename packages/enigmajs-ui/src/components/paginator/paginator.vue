@@ -7,7 +7,7 @@ el-card(shadow="never")
       type="flex"
     )
       el-col.is-first(:md="8", :span="24")
-        span {{ t(`nav.${String(route.name)}`) }}
+        span {{ t(String(route.name)) }}
 
       el-col.is-middle(:md="8", :span="24")
         el-input(

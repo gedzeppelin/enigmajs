@@ -13,7 +13,7 @@
               <el-icon>
                 <icon-back />
               </el-icon> </el-button
-            ><span>{{ t(`nav.${String(route.name)}`) }}</span>
+            ><span>{{ t(String(route.name)) }}</span>
           </div>
         </el-col>
         <el-col class="text-right" :sm="12" :span="24">

@@ -34,7 +34,7 @@
       </el-row>
     </template>
 
-    <eg-loader v-if="isLoading" :height="500" />
+    <eg-loading v-if="isLoading" :height="500" />
 
     <el-form
       v-else

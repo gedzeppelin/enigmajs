@@ -1,19 +1,20 @@
 import {
+  InjectionKey,
   PropType,
+  Ref,
   defineComponent,
   h,
   inject,
   onMounted,
   ref,
-  watch,
-  InjectionKey,
-  Ref,
   resolveComponent,
+  toRef,
+  watch,
 } from "vue";
 
 import { useI18n } from "../../plugins/i18n";
 import { ElButton, ElLink } from "element-plus";
-import { Err, Response, Ok, purgeObject } from "enigmajs-core";
+import { Err, Response, Ok, purgeObject, sleep } from "enigmajs-core";
 import { AxiosRequestConfig } from "axios";
 
 import { useAxios } from "../../plugins/axios";
@@ -94,9 +95,15 @@ export const EgPromiseSection = defineComponent({
 
     const lastOk = ref<Ok>();
 
-    watch(() => props.source, refresh);
-    watch(() => props.requestOpts, refresh, { deep: true });
-    watch(() => props.queryParams, refresh, { deep: true });
+    watch(
+      [
+        toRef(props, "source"),
+        toRef(props, "requestOpts"),
+        toRef(props, "queryParams"),
+      ],
+      refresh,
+      { deep: true }
+    );
 
     watch(locale, () => {
       if (props.followLocale) {
@@ -133,6 +140,8 @@ export const EgPromiseSection = defineComponent({
             : purgedParams;
         }
       }
+
+      await sleep(200000);
 
       const response = await axios.buildResponse({
         request: request,
@@ -223,7 +232,7 @@ export const EgPromiseSection = defineComponent({
                 makeErrButtons(),
               ]),
           })
-        : h(resolveComponent("eg-loader"), {
+        : h(resolveComponent("eg-loading"), {
             height: props.loadingHeight,
             class: ["eg-promise-section", "is-loading"],
           });

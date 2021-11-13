@@ -33,5 +33,10 @@
     "vue": "^3.2.6",
     "vue-json-tree": "^0.4.3",
     "vue-router": "^4.0.11"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.3.11",
+    "tailwindcss": "^2.2.19"
   }
 }

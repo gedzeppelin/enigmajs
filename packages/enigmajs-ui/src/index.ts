@@ -8,7 +8,7 @@ import { EgBackground } from "./components/background";
 import { EgCreateUpdate, EgCreateUpdateI18n } from "./components/create-update";
 import { EgFileInput, EgImageInput } from "./components/file-input";
 import { EgFormI18n } from "./components/form-i18n";
-import { EgLoader } from "./components/loader";
+import { EgLoading } from "./components/loading";
 import { EgNavMenu, EgNavItem } from "./components/nav-menu";
 import { EgObjectTree } from "./components/object-tree";
 import {
@@ -64,7 +64,7 @@ const plugin: Plugin = (app, opts?: PluginOpts) => {
   app.component(EgFileInput.name, EgFileInput);
   app.component(EgFormI18n.name, EgFormI18n);
   app.component(EgImageInput.name, EgImageInput);
-  app.component(EgLoader.name, EgLoader);
+  app.component(EgLoading.name, EgLoading);
   app.component(EgNavItem.name, EgNavItem);
   app.component(EgNavMenu.name, EgNavMenu);
   app.component(EgObjectTree.name, EgObjectTree);
